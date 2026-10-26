@@ -1,0 +1,31 @@
+id,system,verdict,states_value_not_in_docs,note
+Q01,rag,correct,no,"22, cited 02_domain_codes.md"
+Q01,baseline,declined,no,
+Q01,baseline_open,hedged guess,yes,"Says it can't know, then suggests letter codes (AB, AC). GETM uses 22."
+Q02,rag,correct,no,"0.04 ft; also notes the Prairie Wind 0.25 ft exception, correctly labeled"
+Q02,baseline,declined,no,
+Q02,baseline_open,declined,no,"Declines to guess a value; lists where to look"
+Q03,rag,correct,no,"0.25 ft, paper-digitized, overrides 0.04 ft"
+Q03,baseline,declined,no,
+Q03,baseline_open,hedged guess,yes,"Suggests 0.5 to 2 m (about 2 to 6 ft): 7 to 26 times the documented 0.25 ft"
+Q04,rag,correct,no,"18 months, RTD, RTD_DATE note"
+Q04,baseline,declined,no,
+Q04,baseline_open,declined + generic advice,no,"Reads 'retired poles' as physical pole removal (treated wood disposal, NESC); no GETM rule"
+Q05,rag,correct,no,"-77 and VOLT_UNRESOLVED"
+Q05,baseline,declined,no,
+Q05,baseline_open,hedged guess,yes,"Suggests NULL, or a sentinel like -1 or 9999. GETM uses -77."
+Q06,rag,correct,no,"Meaning, PHS_FIX=GLC214, PHS_CD 90 fallback"
+Q06,baseline,declined,no,
+Q06,baseline_open,declined + generic advice,no,"Doesn't recognize the code; generic troubleshooting steps"
+Q07,rag,correct,no,"OOS, SRC_STAT=RET, CNV_HOLD_SVC"
+Q07,baseline,declined,no,
+Q07,baseline_open,hedged guess,yes,"'RET most likely stands for Retired' - the exact trap; BVEC uses RET for out of service"
+Q08,rag,abstained (correct),no,
+Q08,baseline,abstained (correct),no,
+Q08,baseline_open,hedged guess,yes,"Declines, then gives 'typical' spans of 150 to 300 ft"
+Q09,rag,abstained (correct),no,
+Q09,baseline,abstained (correct),no,
+Q09,baseline_open,declined + generic advice,no,"Generic hydrant mapping advice; GETM is electric only, so no GridLine rule exists"
+Q10,rag,correct,no,EPSG:4326
+Q10,baseline,correct,no,EPSG:4326
+Q10,baseline_open,correct,no,EPSG:4326

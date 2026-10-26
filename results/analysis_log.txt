@@ -1,0 +1,58 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+run 1 Q01
+run 1 Q02
+run 1 Q03
+run 1 Q04
+run 1 Q05
+run 1 Q06
+run 1 Q07
+run 1 Q08
+run 1 Q09
+run 1 Q10
+run 2 Q01
+run 2 Q02
+run 2 Q03
+run 2 Q04
+run 2 Q05
+run 2 Q06
+run 2 Q07
+run 2 Q08
+run 2 Q09
+run 2 Q10
+run 3 Q01
+run 3 Q02
+run 3 Q03
+run 3 Q04
+run 3 Q05
+run 3 Q06
+run 3 Q07
+run 3 Q08
+run 3 Q09
+run 3 Q10
+
+Retrieval depth:
+  id           type                        expected  first_correct_rank                     top1_source                                                                                                           top1_section  top1_distance
+Q01          local              02_domain_codes.md                 4.0             01_target_schema.md                                                        GridLine Electric Target Model (GETM) Schema > Conductor Fields          0.859
+Q02          local             04_qa_thresholds.md                 2.0         08_coop_prairie_wind.md                             Prairie Wind Rural Electric (PWRE) - Conversion Notes > QA Exceptions > Snapping Tolerance          0.703
+Q03 coop_exception         08_coop_prairie_wind.md                 1.0         08_coop_prairie_wind.md                             Prairie Wind Rural Electric (PWRE) - Conversion Notes > QA Exceptions > Snapping Tolerance          0.894
+Q04 coop_exception          07_coop_ozark_ridge.md                 1.0          07_coop_ozark_ridge.md          Ozark Ridge Electric Membership Corporation (OREMC) - Conversion Notes > Attribute Exceptions > Retired Poles          0.902
+Q05          local 05_attribute_mapping_general.md                 1.0 05_attribute_mapping_general.md                                                                      General Attribute Mapping Rules > Voltage Mapping          0.771
+Q06          local           11_troubleshooting.md                 1.0           11_troubleshooting.md                                                                                       Troubleshooting Common QA Errors          0.915
+Q07 coop_exception      06_coop_bluestem_valley.md                 1.0      06_coop_bluestem_valley.md Bluestem Valley Electric Cooperative (BVEC) - Conversion Notes > Attribute Exceptions > Service Points with Status RET          0.818
+Q08      uncovered                             NaN                 NaN          07_coop_ozark_ridge.md                                 Ozark Ridge Electric Membership Corporation (OREMC) - Conversion Notes > QA Exceptions          1.127
+Q09      uncovered                             NaN                 NaN             01_target_schema.md                                                         GridLine Electric Target Model (GETM) Schema > Feature Classes          1.105
+Q10 public_control        03_coordinate_systems.md                 1.0        03_coordinate_systems.md                                                           Coordinate Systems and Projection Standards > Field GPS Data          0.785
+
+Accuracy per run:
+ run                1      2      3
+system                            
+baseline       0.125  0.125  0.125
+baseline_open  0.188  0.125  0.125
+rag            1.000  1.000  1.000
+
+Abstentions per run:
+ run            1  2  3
+system                
+baseline       9  9  9
+baseline_open  7  7  8
+rag            2  2  2

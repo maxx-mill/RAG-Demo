@@ -1,0 +1,11 @@
+id,type,expected,first_correct_rank,top1_source,top1_section,top1_distance
+Q01,local,02_domain_codes.md,4.0,01_target_schema.md,GridLine Electric Target Model (GETM) Schema > Conductor Fields,0.859
+Q02,local,04_qa_thresholds.md,2.0,08_coop_prairie_wind.md,Prairie Wind Rural Electric (PWRE) - Conversion Notes > QA Exceptions > Snapping Tolerance,0.703
+Q03,coop_exception,08_coop_prairie_wind.md,1.0,08_coop_prairie_wind.md,Prairie Wind Rural Electric (PWRE) - Conversion Notes > QA Exceptions > Snapping Tolerance,0.894
+Q04,coop_exception,07_coop_ozark_ridge.md,1.0,07_coop_ozark_ridge.md,Ozark Ridge Electric Membership Corporation (OREMC) - Conversion Notes > Attribute Exceptions > Retired Poles,0.902
+Q05,local,05_attribute_mapping_general.md,1.0,05_attribute_mapping_general.md,General Attribute Mapping Rules > Voltage Mapping,0.771
+Q06,local,11_troubleshooting.md,1.0,11_troubleshooting.md,Troubleshooting Common QA Errors,0.915
+Q07,coop_exception,06_coop_bluestem_valley.md,1.0,06_coop_bluestem_valley.md,Bluestem Valley Electric Cooperative (BVEC) - Conversion Notes > Attribute Exceptions > Service Points with Status RET,0.818
+Q08,uncovered,,,07_coop_ozark_ridge.md,Ozark Ridge Electric Membership Corporation (OREMC) - Conversion Notes > QA Exceptions,1.127
+Q09,uncovered,,,01_target_schema.md,GridLine Electric Target Model (GETM) Schema > Feature Classes,1.105
+Q10,public_control,03_coordinate_systems.md,1.0,03_coordinate_systems.md,Coordinate Systems and Projection Standards > Field GPS Data,0.785

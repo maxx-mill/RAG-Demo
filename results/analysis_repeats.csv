@@ -1,0 +1,478 @@
+id,type,accuracy,facts_hit,abstained,abstain_correct,hallucination_flag,system,run,answer
+Q01,local,1.0,1/1,False,True,False,rag,1,**22** [02_domain_codes.md]
+Q01,local,0.0,0/1,True,False,False,baseline,1,not in the docs
+Q01,local,0.0,0/1,True,False,False,baseline_open,1,"I don't have reliable details on a ""GridLine target model"" or its PHS_CD field, so I can't give you the exact code with confidence. I'd rather not guess, since a wrong code could cause problems in a data migration or validation rule.
+
+To find the answer, you could:
+
+- **Check the model's data dictionary or code domain tables** for PHS_CD. These usually list each code and its meaning.
+- **Look at the project's documentation or specification** for the GridLine model, which should define the phase coding scheme.
+- **Ask the team or vendor** that maintains the model.
+
+If you can share the relevant part of the documentation or the list of PHS_CD values, I can help you identify which code corresponds to a two-phase AC conductor."
+Q02,local,1.0,1/1,False,True,False,rag,1,"The default snapping tolerance for connectivity checks is **0.04 ft** under the Revision 7 thresholds [04_qa_thresholds.md]. Prairie Wind Rural Electric (PWRE) uses **0.25 ft** instead, as a QA-lead-approved exception for all its feature classes [08_coop_prairie_wind.md]."
+Q02,local,0.0,0/1,True,False,False,baseline,1,not in the docs
+Q02,local,0.0,0/1,True,False,False,baseline_open,1,"I don't have reliable information about a ""GridLine QA suite"" or its default snapping tolerance for connectivity checks. I'd rather not guess a value, since a wrong number could mislead your QA results.
+
+To find the default, you could:
+
+- **Check the documentation** for a section on connectivity, topology, or snapping. The default is usually listed with the check's settings.
+- **Look at the configuration files** that ship with the suite, such as a default profile, YAML/JSON/XML rule file, or INI file. Search for keywords like `snap`, `tolerance`, `epsilon`, or `connectivity`.
+- **Inspect the check's output or logs** from a run. Many tools print the effective parameters at startup.
+- **Query the tool directly**, for example with a help flag or a command that dumps the configuration (`--help`, `--show-config`, or similar).
+- **Contact the vendor or maintainers**, or check the project's issue tracker or forum if it's open source.
+
+If you can share the documentation or config file, or tell me the tool's vendor or repository, I can help you find the setting and understand how it works."
+Q03,coop_exception,1.0,2/2,False,True,False,rag,1,"Use **0.25 ft** for Prairie Wind Rural Electric. This is a cooperative-specific exception that overrides the Revision 7 default of 0.04 ft [08_coop_prairie_wind.md] [04_qa_thresholds.md].
+
+The reason is that the PWRE network was digitized from paper, so endpoints are rarely coincident [08_coop_prairie_wind.md]. The QA lead approved the exception, and it applies to all PWRE feature classes [08_coop_prairie_wind.md]."
+Q03,coop_exception,0.0,0/2,True,False,False,baseline,1,not in the docs
+Q03,coop_exception,0.5,1/2,True,False,False,baseline_open,1,"I don't know Prairie Wind Rural Electric as a specific project or organization, so I can't tell you what their standard is. If they have a data standard or GIS/CAD template, use that first. If not, here's how to choose a value.
+
+**General principles**
+
+- **Set it above your digitizing and source-data error, but below the smallest real spacing between features.** If your source imagery or GPS data is accurate to about 1 m, a tolerance of roughly 0.5 to 1 m is a reasonable starting point.
+- **Too small** leaves gaps, overshoots, and dangles at line endpoints. In a utility network, that breaks connectivity between poles, transformers, and conductors.
+- **Too large** can pull vertices from nearby features, such as a service drop snapping to a different pole or parallel conductors merging.
+
+**Why rural electric data is tricky**
+
+- Poles and spans are often widely spaced, so you can use a fairly generous tolerance without many false snaps.
+- Service drops and secondary lines can sit close to other assets, so keep the tolerance tight enough to avoid accidental connections.
+- Data often comes from mixed sources (old paper maps, GPS, imagery) with uneven accuracy, so you may need to check results by area.
+
+**How to pick and verify it**
+
+1. Measure the typical positional error of your source data against a few known points.
+2. Start with a tolerance slightly larger than that error.
+3. Run topology or connectivity checks (for example, ArcGIS Utility Network validation or QGIS topology checker) and look for dangles and near-misses.
+4. Adjust and retest on a sample area before applying it to the full dataset.
+
+If you tell me the software (ArcGIS Pro, AutoCAD, QGIS, etc.), the coordinate units, the source data accuracy, and whether the data is for design or as-built mapping, I can suggest a specific value."
+Q04,coop_exception,1.0,2/2,False,True,False,rag,1,"Retired poles are kept in the deliverable for 18 months after their retirement date, not dropped. Map them to `OPR_STAT_CD` = `RTD` and populate `CNV_NOTE` with `RTD_DATE=<yyyy-mm-dd>` [07_coop_ozark_ridge.md]. Poles retired more than 18 months before the conversion date are dropped as usual [07_coop_ozark_ridge.md]."
+Q04,coop_exception,0.0,0/2,True,False,False,baseline,1,not in the docs
+Q04,coop_exception,0.0,0/2,True,False,False,baseline_open,1,"I don't have details on a project called ""Ozark Ridge conversion,"" so I can't tell you its specific requirements. Pole decommissioning generally follows the project's engineering plans, the pole owner's standards, and local and state rules. If you can share the project documents or the utility or agency involved, I can help you interpret them.
+
+In most conversions, retired poles are handled roughly like this:
+
+- **Confirm de-energization and transfer first.** Remove all conductors, transformers, and attachments (telecom, cable, streetlights) and get written sign-off from every joint-use owner before any pole is touched.
+- **Decide remove versus abandon in place.** Many agreements allow poles to be cut at or near ground line and left, while others require full removal. Check the easement and permit terms, since some landowners want poles gone.
+- **Return poles to the owner or salvage them.** Utilities often want retired poles returned to a yard for inspection, tagging, and recycling or resale.
+- **Handle treated wood properly.** Poles are usually treated with creosote, pentachlorophenol, or arsenical preservatives. Don't burn them in open fires, and don't chip or reuse them for mulch, livestock contact, or near water unless the regulator allows it. Disposal often must go to a permitted facility.
+- **Watch for site-specific constraints.** In the Ozarks, karst terrain and shallow groundwater raise concerns about disturbance and contamination. Also check for nesting birds or protected species, cultural or historic resources, and any seasonal restrictions.
+- **Follow safety standards.** Use the NESC, OSHA rules for pole work, and the owner's switching and grounding procedures.
+- **Document everything.** Record pole IDs, removal or abandonment status, disposal manifests, and photos for closeout.
+
+If you tell me which utility or agency is running this, or paste the relevant section of the project spec, I can give you a more specific answer."
+Q05,local,1.0,2/2,False,True,False,rag,1,"The value is **-77** (sentinel), and `CNV_NOTE` gets `VOLT_UNRESOLVED` [05_attribute_mapping_general.md]. Do not guess the voltage from neighboring segments [05_attribute_mapping_general.md]."
+Q05,local,0.0,0/2,True,False,False,baseline,1,not in the docs
+Q05,local,0.0,0/2,True,False,False,baseline_open,1,"I don't recognize `OPR_VOLT_KV` well enough to say what it should default to. It looks like a field name from a particular database, GIS export, or utility or power-systems tool, and the answer depends on that system's schema and conventions.
+
+If you can tell me which software or dataset it comes from, or paste the relevant documentation, parser code, or import spec, I can give you a specific answer. Otherwise, these are the usual options for a numeric kV field when the source value is missing or unparseable:
+
+- **NULL / empty** (often the best choice, since it doesn't invent data)
+- **0**, which is risky because it can be mistaken for a real voltage and skew calculations or filters
+- **A sentinel such as -1**, which must be documented and excluded from downstream math
+- **A default inferred from context**, such as a nominal voltage class for the equipment type, flagged as estimated
+
+If you're writing the parser, I'd suggest storing NULL and logging the record ID and raw value so the gaps can be reviewed. If you share the code or spec, I can check what the existing logic actually does."
+Q06,local,1.0,3/3,False,True,False,rag,1,"**GLC-214** means a conductor carries a phase that its upstream conductor does not have. For example, a C-phase tap (`PHS_CD` 13) fed from an AB line (`PHS_CD` 21). It is usually a source data error, not a mapping error. [11_troubleshooting.md]
+
+**Resolution:**
+1. Trace upstream to the first segment where the phase changes. [11_troubleshooting.md]
+2. If the source attributes are wrong, correct `PHS_CD` on the downstream segment and record `PHS_FIX=GLC214` in `CNV_NOTE`. [11_troubleshooting.md]
+3. If you cannot tell which segment is wrong, set the downstream segment to `PHS_CD` 90 and send the location to the cooperative. [11_troubleshooting.md]
+4. Do not change the upstream segment without confirmation from the cooperative. [11_troubleshooting.md]"
+Q06,local,0.0,0/3,True,False,False,baseline,1,not in the docs
+Q06,local,0.0,0/3,True,False,False,baseline_open,1,"I don't recognize ""GLC-214"" as a specific error code. I don't want to guess at its meaning and send you in the wrong direction. The prefix and number could belong to a particular QA tool, test framework, internal system, or company-specific setup.
+
+To track it down, I'd need to know:
+
+- **Which tool or platform** produces it (e.g., a test management system, CI/CD pipeline, a QA vendor's portal, or an internal app)?
+- **The full error message** or any text around the code.
+- **When it appears**: during test execution, test case creation, a build, a data import, or something else?
+- **Any logs or stack traces** near the error.
+
+In the meantime, these steps usually help with unfamiliar error codes:
+
+1. **Search the vendor's documentation or knowledge base** for the exact code, using quotes.
+2. **Check the logs** for the lines just before and after the error. The root cause is often there.
+3. **Look at what changed recently**: a software update, new configuration, new test data, or new permissions.
+4. **Reproduce it** with the smallest possible input or test case to see whether it's consistent or intermittent.
+5. **Contact support** with the code, the tool name and version, and the steps to reproduce. Error codes are often the fastest route to a known fix on the vendor's side.
+
+If you share the tool name and the error text, I can help you narrow it down."
+Q07,coop_exception,1.0,3/3,False,True,False,rag,1,"For BVEC, source status `RET` maps to `OPR_STAT_CD` = `OOS`, and the original status is copied into `CNV_NOTE` as `SRC_STAT=RET` [06_coop_bluestem_valley.md]. Service points with `RET` and no meter number must also be copied into `CNV_HOLD_SVC` for cooperative review before delivery [06_coop_bluestem_valley.md]."
+Q07,coop_exception,0.0,0/3,True,False,False,baseline,1,not in the docs
+Q07,coop_exception,0.0,0/3,True,False,False,baseline_open,1,"I don't have information about a ""Bluestem Valley"" dataset or what ""RET"" means as a source status code, so I can't tell you how those service points are mapped.
+
+The answer probably depends on the dataset's documentation, which usually covers:
+
+- **The data dictionary or field definitions** for the source status field, which should define what ""RET"" stands for. It might mean retired, retained, returned, retest, or something specific to the system.
+- **The symbology or legend** in the map or GIS layer, which shows how each status value is drawn (color, marker, or excluded from display).
+- **The layer's metadata or readme**, which may explain filtering, such as whether RET points are hidden, shown separately, or included in a query.
+
+If you can share the field names, a sample of the records, the legend text, or the source (for example, a utility's GIS portal, a state water or public health dataset, or a county system), I can help you interpret the status values and how they're mapped. If you're using ArcGIS, QGIS, or another tool, I can also suggest how to check the layer's symbology or filter by that status value."
+Q08,uncovered,,,True,True,False,rag,1,not in the docs
+Q08,uncovered,,,True,True,False,baseline,1,not in the docs
+Q08,uncovered,,,True,True,False,baseline_open,1,"I don't have specific information about a ""Bluestem Valley"" pole line or project, so I can't give you its maximum span length. Limits like this are set by the utility or project owner, and they vary with the line's voltage, conductor type, pole class, terrain, and local wind and ice loading.
+
+To find the exact number, you could:
+
+- **Check the project's engineering or construction specifications.** These usually list the maximum span for each line type.
+- **Contact the utility or electric cooperative** that owns or operates the line. Bluestem Valley may be in a rural service area served by a cooperative.
+- **Look at the governing standard.** In the US, the National Electrical Safety Code (NESC) sets clearance and loading requirements, and the utility's construction standards usually specify spans within those limits.
+
+If you can tell me the location, the utility involved, or whether this is a distribution, transmission, or telecom line, I can give you more general guidance on typical span limits for that type."
+Q09,uncovered,,,True,True,False,rag,1,not in the docs
+Q09,uncovered,,,True,True,False,baseline,1,not in the docs
+Q09,uncovered,,,True,True,False,baseline_open,1,"I'm not familiar with a specific ""GridLine conversion"" standard or tool, so I can't give you its exact mapping rules. I can outline how water hydrant features are typically mapped in utility data conversions, which you can adapt to GridLine's requirements or check against its documentation.
+
+**1. Geometry**
+- Represent each hydrant as a **point** feature at the hydrant's actual location, usually the center of the barrel or the valve/connection point.
+- Keep hydrants separate from the water main line. Don't convert them into line vertices unless the target schema requires it.
+- Confirm the coordinate system and units match the target.
+
+**2. Core identification attributes**
+- Unique asset ID, mapped to the target's primary key, with a crosswalk to the source ID if they differ.
+- Facility or owner ID, and any external system references (work order, CMMS, or asset management IDs).
+
+**3. Hydrant characteristics**
+- **Type:** wet barrel or dry barrel (also called dry barrel/frost-proof). Map source codes to the target's domain values.
+- **Manufacturer and model**, if available.
+- **Size and connections:** main valve size, outlet/nozzle count, outlet sizes (e.g., two 2.5"" and one 4.5""), and thread type (NST, Storz, etc.).
+- **Operating status:** in service, out of service, abandoned, or planned. Use the target's domain values.
+- **Installation and inspection dates**, plus last flow test or maintenance date.
+- **Material** and **year installed**, if the target tracks them.
+
+**4. Relationships and connectivity**
+- Link each hydrant to its **lateral or connecting main** and, if applicable, its **isolation valve**.
+- Assign the **pressure zone** or service area, which often comes from a spatial join to zone polygons rather than the source attributes.
+- Map any **hydrant lateral** or branch pipe as a separate line feature if the target models it.
+
+**5. Domain and code mapping**
+- Build a lookup table from source codes to target domains (e.g., ""WB"" → ""Wet Barrel""). Flag unmapped values instead of defaulting them silently.
+- Normalize units (gallons per minute vs. liters per second, inches vs. millimeters).
+
+**6. Validation after conversion**
+- Check that every hydrant snaps to or is within a reasonable distance of a main.
+- Confirm there are no duplicate IDs or coincident points.
+- Compare feature counts by status and type between source and target.
+- Spot-check symbology and labels to make sure they render correctly.
+
+If you can share the source format, the GridLine schema or data dictionary, or sample fields, I can help build a specific field-by-field mapping table."
+Q10,public_control,1.0,1/1,False,True,False,rag,1,EPSG:4326 [03_coordinate_systems.md]
+Q10,public_control,1.0,1/1,False,True,False,baseline,1,EPSG:4326
+Q10,public_control,1.0,1/1,False,True,False,baseline_open,1,The EPSG code for WGS 84 geographic coordinates (latitude/longitude in degrees) is **EPSG:4326**.
+Q01,local,1.0,1/1,False,True,False,rag,2,**22** [02_domain_codes.md]
+Q01,local,0.0,0/1,True,False,False,baseline,2,not in the docs
+Q01,local,0.0,0/1,True,False,False,baseline_open,2,"I don't have reliable information about the GridLine target model's PHS_CD code list, so I can't give you the value for a two-phase AC conductor with confidence. Guessing could send you down the wrong path.
+
+To find it, check the GridLine data dictionary or code-table documentation for PHS_CD, or the mapping specification if you're working from a migration or integration. The entry for two-phase conductors will be listed with the single-phase and three-phase codes. If you can share the relevant excerpt or the code table, I can help you interpret it."
+Q02,local,1.0,1/1,False,True,False,rag,2,"The default snapping tolerance is **0.04 ft** under Revision 7 [04_qa_thresholds.md]. Prairie Wind Rural Electric (PWRE) uses 0.25 ft instead, as an approved exception [08_coop_prairie_wind.md]."
+Q02,local,0.0,0/1,True,False,False,baseline,2,not in the docs
+Q02,local,0.0,0/1,True,False,False,baseline_open,2,"I don't have information about a product called ""GridLine QA suite,"" so I can't tell you its default snapping tolerance for connectivity checks. I'd rather not guess a value, since a wrong tolerance could lead you to misjudge your results.
+
+To find the default, you could try:
+
+- **Official documentation**: look for sections on connectivity, topology checks, or snapping/tolerance settings.
+- **Configuration files**: default values are often in a config file or in the rule definitions for the connectivity check (names like `snap_tolerance`, `tolerance`, or `epsilon` are common).
+- **In-app settings**: the connectivity or validation rule's properties dialog may show the default and let you change it.
+- **Vendor or support channel**: if it's commercial or internal, the vendor or your team's tooling owner can confirm.
+
+If you can share the documentation excerpt or config snippet, I can help you interpret it. If you tell me which GIS or CAD platform it works with, I can also explain how snapping tolerances usually work in that environment."
+Q03,coop_exception,1.0,2/2,False,True,False,rag,2,"Use **0.25 ft** for Prairie Wind Rural Electric. PWRE's network was digitized from paper, so endpoints are rarely coincident. This exception was approved by the QA lead and applies to all PWRE feature classes [08_coop_prairie_wind.md]. It overrides the Revision 7 default of 0.04 ft [04_qa_thresholds.md]."
+Q03,coop_exception,0.0,0/2,True,False,False,baseline,2,not in the docs
+Q03,coop_exception,0.0,0/2,True,False,False,baseline_open,2,"I don't have information about a ""Prairie Wind Rural Electric"" project or organization, so I can't tell you what it specifies. If it's a client, a utility, or an internal standard, the answer should be in its data standards or with whoever manages its GIS or CAD setup.
+
+Here's how to choose a snapping tolerance in general:
+
+- **Start from your data's accuracy.** The tolerance should be somewhat larger than the positional error of your source data (GPS, digitizing, or imagery). If the source is accurate to about 1 m, a tolerance around 0.5 to 1 m often works. If it's sloppier, you may need more.
+- **Keep it smaller than your closest legitimate feature spacing.** Rural electric networks can have short spans, service drops, or parallel lines near poles. If the tolerance is too large, unrelated features snap together and create false connections.
+- **Use consistent units.** Check whether your coordinate system is in feet or meters. A value of ""1"" can mean very different things in each.
+- **Test on a sample area.** Digitize or import a small section, then check for dangling endpoints (too small) and merged or incorrectly connected features (too large).
+- **Match the tolerance to the software's connectivity rules.** In systems like ArcGIS Utility Network, snapping affects whether features are considered connected, so the value directly impacts network integrity.
+
+If you tell me the software (e.g., ArcGIS, QGIS, AutoCAD Map), the coordinate system and units, the source of the data (GPS, aerial imagery, legacy maps), and the typical span between poles or features, I can suggest a more specific starting value."
+Q04,coop_exception,1.0,2/2,False,True,False,rag,2,Ozark Ridge keeps retired poles in the deliverable for 18 months after their retirement date instead of dropping them. Map them to `OPR_STAT_CD` = `RTD` and populate `CNV_NOTE` with `RTD_DATE=<yyyy-mm-dd>` [07_coop_ozark_ridge.md]. Poles retired more than 18 months before the conversion date are dropped as usual [07_coop_ozark_ridge.md].
+Q04,coop_exception,0.0,0/2,True,False,False,baseline,2,not in the docs
+Q04,coop_exception,0.0,0/2,True,False,False,baseline_open,2,"I don't have details on a project called ""Ozark Ridge,"" so I can't tell you its specific requirements. If it's a utility line conversion, such as overhead-to-underground or a rebuild, the retired poles are usually handled under these general practices:
+
+1. **Check the governing documents first.** The project's construction specifications, the utility's pole retirement procedure, and any joint-use agreement will define ownership, removal responsibility, and sequencing.
+
+2. **Confirm all attachments are removed.** Before a pole is pulled, other utilities such as telecom, cable, and fiber must transfer or remove their equipment under the joint-use process. Many conversions stall because this step is skipped.
+
+3. **Keep the work de-energized and coordinated.** Retirement should happen only after the new facilities are energized and the old circuit is confirmed dead and isolated.
+
+4. **Decide between salvage and disposal.** Sound poles may be reused, returned to the owner's stock, or sold. Damaged or decayed poles go to disposal.
+
+5. **Handle treated wood responsibly.** Most utility poles are treated with creosote, pentachlorophenol, or chromated copper arsenate (CCA). Disposal is often regulated, and some states restrict burning or landfilling. Use licensed haulers or recyclers, and don't burn them or leave them on site.
+
+6. **Manage site restoration.** Remove or backfill holes, address any soil contamination around the base, and restore the right-of-way or easement as required.
+
+7. **Document everything.** Record pole IDs, removal dates, disposition (reused, recycled, or landfilled), and transfer paperwork. This supports asset records and compliance audits.
+
+8. **Follow local rules.** State environmental agencies and local ordinances may add requirements for treated wood, and if the poles are on public land, the land manager may have additional conditions.
+
+If you can share the project documents or tell me who's running it (a utility, a contractor, or a municipality), I can help you find the specific requirements or work through the steps in more detail."
+Q05,local,1.0,2/2,False,True,False,rag,2,"The sentinel value **-77** goes in `OPR_VOLT_KV`, and `VOLT_UNRESOLVED` goes in `CNV_NOTE` [05_attribute_mapping_general.md]. Do not guess the voltage from neighboring segments [05_attribute_mapping_general.md]."
+Q05,local,0.0,0/2,True,False,False,baseline,2,not in the docs
+Q05,local,0.0,0/2,True,False,False,baseline_open,2,"I can't tell you for certain. OPR_VOLT_KV doesn't match a standard field I can identify with confidence, so I don't know which software, schema, or converter defines it, or what its fallback behavior is.
+
+Conventions for this kind of field usually fall into a few options:
+
+- **NULL/empty**, if the column accepts missing values.
+- **0**, which is common but can be misread as a real voltage. Downstream calculations may divide by it or treat the element as de-energized.
+- **A default nominal voltage** taken from a base voltage, bus, or equipment-class lookup.
+- **Rejection of the record**, with an error or warning logged.
+
+If you tell me the software or format (for example PowerWorld, PSS/E, CYME, an internal ETL pipeline, or a CSV spec), or paste the relevant documentation or parsing code, I can give you the specific behavior. If you wrote the parser yourself, the fallback is whatever the code assigns in its exception handler or default-value logic, and that's the place to check."
+Q06,local,1.0,3/3,False,True,False,rag,2,"**GLC-214** means a downstream conductor carries a phase its upstream conductor does not have, such as a C-phase tap (`PHS_CD` 13) fed from an AB line (`PHS_CD` 21). It is usually a source data error, not a mapping error [11_troubleshooting.md].
+
+**Resolution:**
+1. Trace upstream to the first segment where the phase changes [11_troubleshooting.md].
+2. If the source attributes are wrong, correct `PHS_CD` on the downstream segment and record `PHS_FIX=GLC214` in `CNV_NOTE` [11_troubleshooting.md].
+3. If you cannot tell which segment is wrong, set the downstream segment to `PHS_CD` 90 and send the location to the cooperative [11_troubleshooting.md].
+4. Do not change the upstream segment without confirmation from the cooperative [11_troubleshooting.md]."
+Q06,local,0.0,0/3,True,False,False,baseline,2,not in the docs
+Q06,local,0.0,0/3,True,False,False,baseline_open,2,"I don't recognize ""GLC-214"" as a specific error code, and I don't want to guess at its meaning and send you in the wrong direction. ""GLC"" is a prefix used by several vendors and products, so the code could come from many different systems.
+
+To track it down, check these:
+
+1. **Where the error appears:** The application, test framework, CI pipeline, device, or vendor portal that displays it. Error codes are usually scoped to one product.
+2. **Full error message:** The text around the code often explains the cause more than the code itself.
+3. **Vendor documentation:** Search the product's docs or knowledge base for ""GLC-214"" along with the product name.
+4. **Logs:** Look at the logs from the time the error occurred for stack traces, timestamps, or related warnings.
+5. **Recent changes:** Think about any software updates, configuration changes, new hardware, or deployments made just before the error started.
+
+If you tell me the product or system (for example, the software name, hardware model, or tool), what you were doing when the error appeared, and the surrounding error text, I can help you interpret it and work through a fix."
+Q07,coop_exception,1.0,3/3,False,True,False,rag,2,"For BVEC, source status `RET` maps to `OPR_STAT_CD` = `OOS`, and the original status is copied into `CNV_NOTE` as `SRC_STAT=RET` [06_coop_bluestem_valley.md]. Service points with status `RET` and no meter number must also be copied into `CNV_HOLD_SVC` for cooperative review before delivery [06_coop_bluestem_valley.md]."
+Q07,coop_exception,0.0,0/3,True,False,False,baseline,2,not in the docs
+Q07,coop_exception,0.0,0/3,True,False,False,baseline_open,2,"I don't have information about a ""Bluestem Valley"" dataset or what ""RET"" means as a source status, so I can't tell you how those service points are mapped.
+
+If you can share more context, I can help. Useful details would be:
+
+- **The system or dataset:** Is it a GIS layer, a utility billing or asset system, a state or county database, or a spreadsheet export?
+- **The field definitions:** Is there a data dictionary or legend that explains ""RET"" and the other source status codes?
+- **The mapping setup:** Are you asking how the points are symbolized on a map, how the status is joined to the geometry, or how to filter for them?
+
+If ""RET"" is a code in a particular software package, such as a water system inventory or a GIS asset tool, the vendor documentation or the agency's metadata page will usually define it and the symbology rules. If you paste the field names, a sample of the records, or the legend text, I can help interpret them or write a query or mapping approach."
+Q08,uncovered,,,True,True,False,rag,2,not in the docs
+Q08,uncovered,,,True,True,False,baseline,2,not in the docs
+Q08,uncovered,,,True,True,False,baseline_open,2,"I don't have information about a ""Bluestem Valley"" with a specific pole span rule. It could be a utility service territory, a development with its own design standards, or a local ordinance, and I don't know which one you mean.
+
+The answer is usually in one of these places:
+
+- **Utility design standards:** The electric or telecom provider serving the area publishes construction standards with maximum span lengths.
+- **Subdivision or development covenants:** Some developments specify utility layout rules, including whether lines must be underground.
+- **Local or county ordinances:** Planning or public works departments may set requirements for new pole installations.
+- **Project specifications:** If you're working on a specific job, the engineering drawings or contract documents will list the allowed span.
+
+For general reference, overhead distribution spans are often about 100 to 250 feet, and rural co-ops commonly use around 250 to 300 feet. Transmission spans are much longer, often 300 to 1,000 feet or more. The actual limit depends on conductor type, required ground clearance, wind and ice loading, and the local utility's standards, so treat these numbers as rough guides only.
+
+If you tell me who manages Bluestem Valley (a utility, a developer, or a municipality) or share the document you're looking at, I can help you find or interpret the specific requirement."
+Q09,uncovered,,,True,True,False,rag,2,not in the docs
+Q09,uncovered,,,True,True,False,baseline,2,not in the docs
+Q09,uncovered,,,False,False,True,baseline_open,2,"I'm not certain which ""GridLine"" product you mean, so I can't cite its exact field names or menus. But the general principles for mapping water hydrants in any utility GIS or CAD-to-GIS conversion are fairly consistent.
+
+**1. Geometry**
+- Map hydrants as **point features**, placed at the hydrant's actual location (typically the center of the hydrant body or the valve/connection point, per your standard).
+- If the source has hydrants as blocks or symbols in CAD, convert the insertion point to a point geometry. Don't convert them to polygons or lines.
+- Snap or connect them to the water main network only if your target model requires connectivity. Many models keep hydrants as standalone points linked by a lateral or a ""connected to"" relationship.
+
+**2. Feature class and layer**
+- Route all hydrants to a single hydrant feature class or layer, not mixed in with valves, service points, or generic utility points.
+- Preserve layer or block names from the source in a field (for example, `SOURCE_LAYER`) so you can trace features back during QA.
+
+**3. Attribute mapping**
+Map source attributes to standard hydrant fields, such as:
+- **Asset ID / facility ID:** unique, persistent, and never reused. If the source lacks IDs, generate them and keep a crosswalk.
+- **Hydrant type:** dry barrel, wet barrel, or pit, using your domain values.
+- **Status / operational state:** active, out of service, abandoned, planned.
+- **Size / nozzle configuration:** main valve size, outlet sizes (e.g., 2 × 2.5"" + 1 × 4.5"").
+- **Manufacturer, model, install or inspection date.**
+- **Owner / jurisdiction, pressure zone, and maintenance area.**
+- **Connected main ID** or pipe segment reference, if available.
+- **Flow test or pressure data**, if your model stores it.
+
+**4. Domain and value translation**
+- Convert free-text values (""Dry Barrel,"" ""DB,"" ""dry"") to controlled domain codes.
+- Document every translation in a lookup table.
+- Flag unmapped values rather than defaulting them silently.
+
+**5. Data quality and validation**
+- Check for duplicate points and hydrants stacked on the same coordinate.
+- Confirm coordinate system and units match the target.
+- Verify that required fields are populated and within domain.
+- Spot-check a sample against aerial imagery or field records.
+- Log features that failed conversion, with reasons.
+
+**6. Reconciliation**
+- Compare feature counts by source and target, and by status.
+- Keep an audit trail of changes and transformation rules so the conversion can be repeated or explained later.
+
+If you can share the GridLine documentation, the source data schema, or the target model (e.g., an ArcGIS utility network or a custom schema), I can give you a more specific field-by-field mapping."
+Q10,public_control,1.0,1/1,False,True,False,rag,2,EPSG:4326 [03_coordinate_systems.md]
+Q10,public_control,1.0,1/1,False,True,False,baseline,2,EPSG:4326
+Q10,public_control,1.0,1/1,False,True,False,baseline_open,2,The EPSG code for WGS 84 geographic coordinates (latitude and longitude in degrees) is **EPSG:4326**.
+Q01,local,1.0,1/1,False,True,False,rag,3,**22** [02_domain_codes.md]
+Q01,local,0.0,0/1,True,False,False,baseline,3,not in the docs
+Q01,local,0.0,0/1,True,False,False,baseline_open,3,"I don't have a reliable reference for the GridLine target model, so I can't confirm the exact PHS_CD code for a two-phase AC conductor. Utility data models often encode two-phase conductors as a combination of phase letters, such as ""AB"", ""BC"", or ""CA"", but some use numeric codes instead. Check the GridLine data dictionary or the model's domain/code table for the authoritative value."
+Q02,local,1.0,1/1,False,True,False,rag,3,The default snapping tolerance for connectivity checks is **0.04 ft** under Revision 7 [04_qa_thresholds.md]. PWRE is an exception and uses **0.25 ft** [08_coop_prairie_wind.md].
+Q02,local,0.0,0/1,True,False,False,baseline,3,not in the docs
+Q02,local,0.0,0/1,True,False,False,baseline_open,3,"I don't have reliable information about a product called ""GridLine QA suite,"" so I can't tell you its default snapping tolerance for connectivity checks. I'd rather not guess, since a wrong tolerance value could mislead your QA results.
+
+To find the answer, you could:
+
+- **Check the documentation** for a section on connectivity, topology, or snapping. The default is usually listed under configuration or settings reference.
+- **Look at the config files** in the installation or project directory. Tolerance values are often set in a YAML, JSON, or INI file, or in a rules file.
+- **Open the GUI settings** if the tool has one, typically under the connectivity or validation rule's properties.
+- **Ask the vendor or your internal tool maintainers** if it's proprietary or internal.
+- **Run a quick test:** create two line segments with a small known gap and see whether the checker flags them, then narrow down the threshold.
+
+If you can share the documentation excerpt or config file, I can help you interpret it or set the tolerance for your project."
+Q03,coop_exception,1.0,2/2,False,True,False,rag,3,"Use **0.25 ft** for PWRE. It is a QA-approved exception to the Revision 7 default of 0.04 ft, and it applies to all PWRE feature classes [08_coop_prairie_wind.md]. The reason is that the PWRE network was digitized from paper, so endpoints are rarely coincident [08_coop_prairie_wind.md]."
+Q03,coop_exception,0.0,0/2,True,False,False,baseline,3,not in the docs
+Q03,coop_exception,0.0,0/2,True,False,False,baseline_open,3,"I don't have information about a ""Prairie Wind Rural Electric"" organization or its system, so I can't tell you what that specific setup requires. It may be an internal project, a training dataset, or a configuration in a particular GIS or utility design tool.
+
+In general, the right snapping tolerance depends on three things:
+
+1. **Data accuracy.** If your existing data came from survey-grade GPS, a tolerance of a few centimeters to about 0.3 m (1 ft) is usually enough. If it came from GPS handhelds or was digitized from aerial imagery, you may need 1 to 5 m or more.
+2. **Minimum spacing between distinct features.** The tolerance must be smaller than the closest distance between two assets that should *not* connect, such as two poles, a pole and a transformer, or parallel conductors on crossarms. If it's too large, you'll snap unrelated features together.
+3. **What you need to connect.** Snapping should catch endpoint-to-endpoint connections (conductor to pole, service drop to transformer) without snapping to vertices that are merely nearby.
+
+A reasonable approach is to start small, test on a sample area, and check for both missed connections (dangles or gaps) and unwanted merges. Adjust from there.
+
+If you tell me the software (for example, ArcGIS/ArcFM, AutoCAD Map, Milsoft, or something else), the units of your data, and how the features were collected, I can suggest a more specific value."
+Q04,coop_exception,1.0,2/2,False,True,False,rag,3,Retired poles are kept in the deliverable for 18 months after their retirement date instead of being dropped. Map them to `OPR_STAT_CD` = `RTD` and populate `CNV_NOTE` with `RTD_DATE=<yyyy-mm-dd>`. Poles retired more than 18 months before the conversion date are dropped as usual. [07_coop_ozark_ridge.md]
+Q04,coop_exception,0.0,0/2,True,False,False,baseline,3,not in the docs
+Q04,coop_exception,0.0,0/2,True,False,False,baseline_open,3,"I don't have details on an ""Ozark Ridge conversion"" project, so I can't say what its plan specifies. If you can share the project documents or name the utility or owner, I can be more specific. In general, retired poles from a line conversion (such as overhead-to-underground or a rebuild) are usually handled like this:
+
+1. **Confirm ownership and joint-use obligations.** Poles are often shared with telecom or cable companies, which must move or remove their attachments before the pole comes out. Confirm who owns each pole and who has authority to remove it.
+
+2. **Verify the line is de-energized and attachments are cleared.** Check that conductors, transformers, and communication lines are off the pole before removal.
+
+3. **Check for hazardous components.** Older transformers may contain PCB-laden oil, and older poles are often treated with creosote or pentachlorophenol. These need handling under environmental rules.
+
+4. **Choose a disposition path:**
+   - **Remove and reuse or resell** if the pole is in good condition.
+   - **Donate or transfer** to landowners, farms, or local governments, with the proper paperwork.
+   - **Cut and leave in place** only where permitted and agreed with the landowner, since this may require a stub-disposal plan.
+   - **Dispose of at a permitted facility.** Treated wood usually can't go in ordinary landfills or be burned in the open, so follow state solid-waste and hazardous-waste rules.
+
+5. **Address the site.** Backfill and compact holes, restore the right-of-way, and handle any soil disturbance as the permits require.
+
+6. **Document and update records.** Log the removal in asset-management or GIS systems and keep disposal manifests.
+
+7. **Coordinate with landowners and local authorities** on access, timing, and any permits for removal or transport.
+
+If you tell me which utility or agency is running the project, or share the relevant section of the plan, I can help you work through the specifics."
+Q05,local,1.0,2/2,False,True,False,rag,3,"`OPR_VOLT_KV` gets the sentinel value **-77**, and `CNV_NOTE` gets `VOLT_UNRESOLVED` [05_attribute_mapping_general.md]. Do not guess the voltage from neighboring segments [05_attribute_mapping_general.md].
+
+For PWRE, a null `VOLT_CLASS` also receives -77 [08_coop_prairie_wind.md]."
+Q05,local,0.0,0/2,True,False,False,baseline,3,not in the docs
+Q05,local,0.0,0/2,True,False,False,baseline_open,3,"I don't have enough context to say for certain. `OPR_VOLT_KV` doesn't match a field I can identify in a standard library or format, so it's probably specific to a particular tool, library, or dataset. The fallback behavior is set by that project's parsing code, not by a general convention.
+
+Common patterns for a blank or unparseable kV value include:
+
+- **`0.0`**, a sentinel meaning ""unknown.""
+- **`None`, `NaN`, or `null`**, if the code needs to distinguish ""missing"" from zero.
+- **A default or nominal voltage**, such as the base kV of the bus or the voltage class of the element.
+- **An error or skipped record**, if the parser rejects the row.
+
+To find the actual behavior, search the project for `OPR_VOLT_KV` and look at the `except` or `ValueError` branch of the parsing code, or the default in the field's initializer or schema. If you paste that snippet, or tell me which tool or format this is from, I can point you to the exact logic."
+Q06,local,1.0,3/3,False,True,False,rag,3,"**GLC-214** means a downstream conductor carries a phase that its upstream conductor does not have. For example, a C-phase tap (`PHS_CD` 13) fed from an AB line (`PHS_CD` 21). It is usually a source data error, not a mapping error. [11_troubleshooting.md]
+
+**Resolution:** [11_troubleshooting.md]
+1. Trace upstream to the first segment where the phase changes.
+2. If the source attributes are wrong, correct `PHS_CD` on the downstream segment and record `PHS_FIX=GLC214` in `CNV_NOTE`.
+3. If you cannot tell which segment is wrong, set the downstream segment to `PHS_CD` 90 and send the location to the cooperative.
+4. Do not change the upstream segment without confirmation from the cooperative."
+Q06,local,0.0,0/3,True,False,False,baseline,3,not in the docs
+Q06,local,0.0,0/3,True,False,False,baseline_open,3,"I don't recognize ""GLC-214"" as a standard error code, so I can't tell you its exact meaning without more context. It's probably specific to a particular QA tool, test framework, internal system, or vendor. The ""GLC"" prefix might be a product or module abbreviation, but I can't confirm that.
+
+To help, I'd need:
+
+- **The tool or system** (e.g., a testing platform, CI/CD pipeline, LIMS, or a company's internal QA system)
+- **The full error message** and any surrounding log lines
+- **What you were doing** when it appeared (running a test, submitting a batch, a build step, etc.)
+- **Where you saw it** (a UI, console, log file, or API response)
+
+In the meantime, these steps usually help with unfamiliar QA errors:
+
+1. **Search the error code** together with the product name in the vendor's documentation or knowledge base.
+2. **Check the full log** around the error for a more descriptive message, stack trace, or referenced file.
+3. **Look at recent changes**: new test cases, config edits, updated dependencies, or environment differences.
+4. **Reproduce it** with the smallest possible input to see whether it's data-specific or consistent.
+5. **Check the error's context fields**, such as test IDs, parameters, or timestamps, which often point to the cause.
+6. **Contact your internal QA or support team** if it's an internal system, or the vendor's support if it's third-party. Include the code and steps to reproduce.
+
+If you share the tool name and the error text, I can give you more specific guidance."
+Q07,coop_exception,1.0,3/3,False,True,False,rag,3,"For BVEC, source status `RET` maps to `OPR_STAT_CD` = `OOS`, and the original status is copied into `CNV_NOTE` as `SRC_STAT=RET` [06_coop_bluestem_valley.md]. Service points with status `RET` and no meter number must also be copied into `CNV_HOLD_SVC` for cooperative review before delivery [06_coop_bluestem_valley.md]."
+Q07,coop_exception,0.0,0/3,True,False,False,baseline,3,not in the docs
+Q07,coop_exception,0.0,0/3,True,False,False,baseline_open,3,"I don't have access to a dataset or GIS layer for Bluestem Valley, so I can't tell you how its service points with source status ""RET"" are mapped.
+
+""RET"" is probably a code for ""retired"" (a source taken out of service), but I can't confirm that from here. If you can share one of these, I can help more directly:
+
+- **The data itself**: a sample of the table or export, with the field names and the RET records.
+- **The map or legend**: a screenshot or description of how status values are symbolized.
+- **The documentation or data dictionary**: the source system's guide to status codes and the mapping rules.
+
+If you're working in a GIS or utility database yourself, you can usually find the answer by:
+
+1. Checking the layer's symbology or attribute table to see how the status field drives color or marker style.
+2. Querying the status field for `RET` (for example, `WHERE source_status = 'RET'`) to find which features it covers.
+3. Looking for a domain or lookup table that defines the code's meaning.
+4. Asking the data owner, such as the water utility or district, for their mapping convention."
+Q08,uncovered,,,True,True,False,rag,3,not in the docs
+Q08,uncovered,,,True,True,False,baseline,3,not in the docs
+Q08,uncovered,,,True,True,False,baseline_open,3,"I don't have information about a specific ""Bluestem Valley"" project, so I can't give you its pole span limit. It could be a utility line, a development, or a rural electric or telecom project, and each may have its own standards.
+
+If you can share the document or project details, I can help you find the figure. It's usually in one of these places:
+
+- **Construction or design specifications** for the project, often under a section on overhead lines or pole spacing
+- **The utility's engineering standards**, if the line belongs to a specific electric cooperative, telephone company, or municipality
+- **Permit conditions or a county/city ordinance** that governs the work
+- **The engineering drawings or plan set**, which often list the maximum span
+
+For general reference, the National Electrical Safety Code (NESC) sets clearance and loading requirements that limit spans, and typical distribution spans run roughly 100 to 300 feet depending on conductor, pole class, terrain, and voltage. The governing local standard always takes precedence over these ballpark figures."
+Q09,uncovered,,,True,True,False,rag,3,not in the docs
+Q09,uncovered,,,True,True,False,baseline,3,not in the docs
+Q09,uncovered,,,False,False,True,baseline_open,3,"I'm not certain which product ""GridLine"" refers to, so I can't cite its exact mapping rules or field names. In general, though, hydrants are mapped as **point features** in a water utility data conversion. Here's how to approach it:
+
+**1. Geometry**
+- Represent each hydrant as a single point at its physical location, usually at the hydrant base or valve connection.
+- Snap or connect it to the water main or lateral it serves, if the target schema supports network connectivity.
+- Confirm the coordinate system and projection match the target.
+
+**2. Core attributes to map**
+- **Unique ID**: the source asset ID, kept as a persistent key.
+- **Hydrant type**: e.g., dry barrel, wet barrel, or pillar.
+- **Status/condition**: in service, out of service, abandoned, or planned.
+- **Owner/maintenance responsibility**: utility, municipality, or private.
+- **Size and connections**: main-line connection size, outlet sizes (pumper and hose ports), and nozzle thread type.
+- **Install and inspection dates**: for lifecycle and flow-test tracking.
+- **Pressure zone or service area**: for hydraulic modeling.
+- **Installation or valve references**: the isolation valve IDs associated with the hydrant.
+
+**3. Domain and code translation**
+- Build lookup tables that map legacy codes (e.g., ""DB"" or ""1"") to target domain values (""Dry Barrel"").
+- Flag unmapped values rather than defaulting them silently.
+
+**4. Relationships**
+- Link hydrants to the parent main or lateral pipe.
+- Link hydrants to isolation valves if these are separate features.
+
+**5. Validation**
+- Check for duplicate points at the same location.
+- Check for hydrants with no network connection or those falling outside the service area.
+- Compare record counts before and after conversion.
+- Spot-check symbology and attributes against source drawings or field records.
+
+**6. Metadata**
+- Record the source, conversion date, and any transformation rules applied, for auditability.
+
+If you can share the source and target formats or GridLine's schema or documentation, I can give more specific field-by-field mapping guidance."
+Q10,public_control,1.0,1/1,False,True,False,rag,3,EPSG:4326 [03_coordinate_systems.md]
+Q10,public_control,1.0,1/1,False,True,False,baseline,3,EPSG:4326
+Q10,public_control,1.0,1/1,False,True,False,baseline_open,3,The EPSG code for WGS 84 geographic coordinates (latitude and longitude in decimal degrees) is **EPSG:4326**.

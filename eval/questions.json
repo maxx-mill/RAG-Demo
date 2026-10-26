@@ -1,0 +1,89 @@
+[
+  {
+    "id": "Q01",
+    "type": "local",
+    "covered": true,
+    "question": "In the GridLine target model, what PHS_CD value is used for a two-phase AC conductor?",
+    "key_facts": [["22"]],
+    "source": "02_domain_codes.md",
+    "note": "A general LLM tends to answer with the bitmask convention (A=4, C=1 -> 5)."
+  },
+  {
+    "id": "Q02",
+    "type": "local",
+    "covered": true,
+    "question": "What snapping tolerance does the GridLine QA suite use by default for connectivity checks?",
+    "key_facts": [["0.04 ft", "0.04 feet", "0.04"]],
+    "source": "04_qa_thresholds.md",
+    "note": "The doc also mentions the outdated Revision 6 value (0.1 ft) as a distractor."
+  },
+  {
+    "id": "Q03",
+    "type": "coop_exception",
+    "covered": true,
+    "question": "What snapping tolerance should I use for Prairie Wind Rural Electric, and why?",
+    "key_facts": [["0.25 ft", "0.25 feet", "0.25"], ["paper"]],
+    "source": "08_coop_prairie_wind.md",
+    "note": "Exception overrides the 0.04 ft default."
+  },
+  {
+    "id": "Q04",
+    "type": "coop_exception",
+    "covered": true,
+    "question": "How should retired poles be handled in the Ozark Ridge conversion?",
+    "key_facts": [["18 months", "18-month", "eighteen months"], ["RTD"]],
+    "source": "07_coop_ozark_ridge.md"
+  },
+  {
+    "id": "Q05",
+    "type": "local",
+    "covered": true,
+    "question": "What value goes in OPR_VOLT_KV when the source voltage is blank or can't be parsed?",
+    "key_facts": [["-77"], ["VOLT_UNRESOLVED"]],
+    "source": "05_attribute_mapping_general.md"
+  },
+  {
+    "id": "Q06",
+    "type": "local",
+    "covered": true,
+    "question": "What does QA error GLC-214 mean, and how do I resolve it?",
+    "key_facts": [["subset", "does not have", "doesn't have", "not present"], ["PHS_FIX=GLC214"], ["90"]],
+    "source": "11_troubleshooting.md"
+  },
+  {
+    "id": "Q07",
+    "type": "coop_exception",
+    "covered": true,
+    "question": "For Bluestem Valley, how are service points with source status RET mapped?",
+    "key_facts": [["OOS"], ["SRC_STAT=RET"], ["CNV_HOLD_SVC"]],
+    "source": "06_coop_bluestem_valley.md",
+    "note": "A general LLM tends to assume RET means retired."
+  },
+  {
+    "id": "Q08",
+    "type": "uncovered",
+    "covered": false,
+    "question": "What is the maximum allowed span length between poles for Bluestem Valley?",
+    "key_facts": [],
+    "source": null,
+    "note": "Not in the docs. Correct behavior is to abstain."
+  },
+  {
+    "id": "Q09",
+    "type": "uncovered",
+    "covered": false,
+    "question": "How should water hydrant features be mapped in a GridLine conversion?",
+    "key_facts": [],
+    "source": null,
+    "note": "Not in the docs (GETM is electric only). Correct behavior is to abstain."
+  },
+  {
+    "id": "Q10",
+    "type": "public_control",
+    "covered": true,
+    "question": "What is the EPSG code for WGS 84 geographic coordinates?",
+    "key_facts": [["4326"]],
+    "source": "03_coordinate_systems.md",
+    "note": "Public knowledge. Both systems should get it right."
+  }
+]

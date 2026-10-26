@@ -1,0 +1,4 @@
+system,accuracy (key facts),hallucination flags,abstained on uncovered,false abstentions,retrieval hit rate
+baseline,0.125,0,2/2,7,
+baseline_open,0.125,0,2/2,7,
+rag,1.0,0,2/2,0,1.0
